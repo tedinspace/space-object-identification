@@ -1,0 +1,6 @@
+.DS_Store
+**/.DS_Store
+.local
+.idea/
+__pycache__
+ted-strack.ini
