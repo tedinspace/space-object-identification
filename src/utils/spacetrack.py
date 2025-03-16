@@ -1,5 +1,4 @@
 import configparser
-from datetime import datetime
 import requests
 
 '''
@@ -36,18 +35,20 @@ def api_login(session, credentials):
 def api_current_satellite_catalog(session):
     resp =  session.get(URL_BASE + URL_SATCAT_CURRENT)
     if resp.status_code != 200:
-        raise Exception("unable to access api")
+        raise Exception("unable to access api (via api_current_satellite_catalog)")
     return resp
 
 def api_decayed_satellite_catalog(session):
     resp =  session.get(URL_BASE + URL_SATCAT_DECAYED)
     if resp.status_code != 200:
-        raise Exception("unable to access api")
+        raise Exception("unable to access api (via api_decayed_satellite_catalog)")
     return resp
 
-def timestamp():
-    '''creates a timestamp string (ISO)'''
-    return datetime.now().isoformat().replace('-','_').replace(':','_').split('.')[0]
+def api_catalog_snapshot(session, start, stop):
+    resp =  session.get(f'{URL_BASE}/basicspacedata/query/class/gp/EPOCH/{start}--{stop}/orderby/NORAD_CAT_ID,EPOCH/format/3le')
+    if resp.status_code != 200:
+        raise Exception("something went wrong (api_catalog_snapshot)")
+    return resp
 
 def request_repull_current_and_decayed_satcats(credentials_path, ):
     '''start to finish request for repulling satcats; 
