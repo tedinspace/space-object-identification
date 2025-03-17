@@ -71,6 +71,7 @@ def compute_regime(a, p):
     REG_6  = (p>=1.75*earthrad and p<5.2*earthrad  and a>=6*earthrad    and a<7.5*earthrad)
     REG_7  = (p>=1.75*earthrad and a>=7.5*earthrad)
     REG_8  = (p<1.75*earthrad  and a<=7.5*earthrad)
+    REG_9 = ( a>earthrad*6 and p< earthrad*1.9)
     
     if REG_1a or REG_1b:
         return "LEO" 
@@ -78,7 +79,6 @@ def compute_regime(a, p):
         return "MEO"
     if REG_5:
         return "GEO"
-    if REG_2 or REG_3 or REG_6 or REG_7 or REG_8:
+    if REG_2 or REG_3 or REG_6 or REG_7 or REG_8 or REG_9:
         return "HEO"
-
     return "OTHER"
