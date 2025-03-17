@@ -2,6 +2,11 @@ import zipfile
 import json
 import utils.TLE as TLE
 
+def loadSeveralYearsOfUnprocessedStates(file_name_array):
+     snapshot_states=[]
+     for name in file_name_array:
+          snapshot_states = [*snapshot_states, * loadUnprocessedStateSnapshots(name)]
+     return snapshot_states
 
 def loadUnprocessedStateSnapshots(file_name_with_path):
     '''returns list unprocessed TLEs'''
