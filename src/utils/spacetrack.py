@@ -33,18 +33,21 @@ def api_login(session, credentials):
     return resp
 
 def api_current_satellite_catalog(session):
+    '''pulls the current sat cat'''
     resp =  session.get(URL_BASE + URL_SATCAT_CURRENT)
     if resp.status_code != 200:
         raise Exception("unable to access api (via api_current_satellite_catalog)")
     return resp
 
 def api_decayed_satellite_catalog(session):
+    '''pulls the catalog of decayed objcts'''
     resp =  session.get(URL_BASE + URL_SATCAT_DECAYED)
     if resp.status_code != 200:
         raise Exception("unable to access api (via api_decayed_satellite_catalog)")
     return resp
 
 def api_catalog_snapshot(session, start, stop):
+    '''pulls a TLE/state catalog snapshot between given time range'''
     resp =  session.get(f'{URL_BASE}/basicspacedata/query/class/gp_history/EPOCH/{start}--{stop}/orderby/NORAD_CAT_ID,EPOCH/format/3le')
     if resp.status_code != 200:
         raise Exception("something went wrong (api_catalog_snapshot)")

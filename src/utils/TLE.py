@@ -14,39 +14,51 @@ def name(L0):
     return L0.split("0 ")[1].strip()
 
 def tle_epoch(L1):
+    '''unpacks epoch from line 1'''
     return float(L1[18:32].strip())
 
 def tle_meanmotion_1st_der(L1):
+    '''unpacks first deriv of MM from line 1'''
     return float(L1[33:43].strip())
 
 def tle_incl(L2):
+    '''unpacks inclination from line 2'''
     return float(L2[8:16].strip())
 
 def tle_RAAN(L2):
+    '''unpacks RAAN from line 2'''
     return float(L2[17:25].strip())
 
 def tle_ecc(L2):
+    '''unpacks eccentricity from L2'''
     return float("0."+L2[26:33].strip())
 
 def tle_argper(L2):
+    '''unpacks argper from line 2'''
     return float(L2[34:42].strip())
 
 def tle_meananom(L2):
+    '''unpacks mean ano from line2'''
     return float(L2[43:51].strip())
 
 def tle_meanmotion(L2):
+    '''unpacks mean motion from line 2'''
     return float(L2[52:63].strip())
 
 def compute_SMA(mean_motion):
+    '''computes semi-major axis'''
     return ((mu)**(1/3)/((2*math.pi*mean_motion)/(86400))**(2/3))/1000
 
 def compute_apogee(sma, ecc):
+    '''computes apogee'''
     return sma*(1+ecc) - earthrad
+
 def compute_perigee(sma, ecc):
+    '''computes perigee'''
     return sma*(1-ecc) - earthrad
 
 def compute_regime(a, p):
-    '''source Vallado '''
+    ''' computes orbital regime; @source Vallado '''
     a = a + earthrad
     p = p + earthrad
 

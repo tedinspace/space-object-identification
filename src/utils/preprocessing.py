@@ -3,12 +3,27 @@ import json
 import utils.TLE as TLE
 
 def loadSeveralYearsOfUnprocessedStates(file_name_array):
+     '''take several file paths for TLE snapshots and unloads them into one big array'''
      snapshot_states=[]
      for name in file_name_array:
           snapshot_states = [*snapshot_states, * loadUnprocessedStateSnapshots(name)]
      return snapshot_states
 
+def loadUnprocessedStateSnapshots(file_name_with_path):
+    '''returns list unprocessed TLEs'''
+    snapshot_states = []
+    with zipfile.ZipFile(file_name_with_path) as z:
+            file_list = z.namelist()
+            text_files = [file for file in file_list if file.startswith("snapshots/snapshot_states_") and file.endswith('.txt')]
+            for file_name in text_files:
+                with z.open(file_name) as f:
+                    decoded_content = f.read().decode('utf-8').split("\r\n")
+
+                    snapshot_states = [*snapshot_states, *removeDuplicateRSOsInSnapshot(decoded_content)]
+    return snapshot_states
+
 def removeDuplicateRSOsInSnapshot(states):
+     '''intended to remove duplicate objects in a single day/snapshot'''
      saved_states =[]
      found_rsos = set()
      for idx in range(0,len(states),3):
@@ -24,20 +39,6 @@ def removeDuplicateRSOsInSnapshot(states):
                
                found_rsos.add(rso_number)
      return saved_states
-
-def loadUnprocessedStateSnapshots(file_name_with_path):
-    '''returns list unprocessed TLEs'''
-    snapshot_states = []
-    with zipfile.ZipFile(file_name_with_path) as z:
-            file_list = z.namelist()
-            text_files = [file for file in file_list if file.startswith("snapshots/snapshot_states_") and file.endswith('.txt')]
-            for file_name in text_files:
-                with z.open(file_name) as f:
-                    decoded_content = f.read().decode('utf-8').split("\r\n")
-
-                    snapshot_states = [*snapshot_states, *removeDuplicateRSOsInSnapshot(decoded_content)]
-    return snapshot_states
-
 
 def loadUnprocessedSatCat_current(file_name_with_path):
      '''load the unprocessed satcat json'''
@@ -56,6 +57,7 @@ def loadUnprocessedSatCat_decayed(file_name_with_path):
 
 
 def deduplicateAndMergeDataSources(snapshot_states, satCat_current, satCat_decayed):
+     '''master logic for merging snapshots and satellite catalogs; also performs deduplication and SMA/ap/per/regime calculations'''
      deduplication_record = {}
      uncataloged_states = {}
      nDuplicatesFound = 0
