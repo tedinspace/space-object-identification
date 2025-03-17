@@ -8,6 +8,23 @@ def loadSeveralYearsOfUnprocessedStates(file_name_array):
           snapshot_states = [*snapshot_states, * loadUnprocessedStateSnapshots(name)]
      return snapshot_states
 
+def removeDuplicateRSOsInSnapshot(states):
+     saved_states =[]
+     found_rsos = set()
+     for idx in range(0,len(states),3):
+          if states[idx].startswith("0 "):
+               L0 = states[idx]
+               L1 = states[idx+1]
+               L2 = states[idx+2]
+               rso_number = TLE.rso_no_zero(L1)
+               if rso_number not in found_rsos:
+                    saved_states.append(L0)
+                    saved_states.append(L1)
+                    saved_states.append(L2)
+               
+               found_rsos.add(rso_number)
+     return saved_states
+
 def loadUnprocessedStateSnapshots(file_name_with_path):
     '''returns list unprocessed TLEs'''
     snapshot_states = []
@@ -18,7 +35,7 @@ def loadUnprocessedStateSnapshots(file_name_with_path):
                 with z.open(file_name) as f:
                     decoded_content = f.read().decode('utf-8').split("\r\n")
 
-                    snapshot_states = [*snapshot_states, *decoded_content]
+                    snapshot_states = [*snapshot_states, *removeDuplicateRSOsInSnapshot(decoded_content)]
     return snapshot_states
 
 
