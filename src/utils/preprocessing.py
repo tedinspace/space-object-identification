@@ -8,7 +8,7 @@ def loadUnprocessedStateSnapshots(file_name_with_path):
     snapshot_states = []
     with zipfile.ZipFile(file_name_with_path) as z:
             file_list = z.namelist()
-            text_files = [file for file in file_list if file.startswith("snapshots/snap_satcat_") and file.endswith('.txt')]
+            text_files = [file for file in file_list if file.startswith("snapshots/snapshot_states_") and file.endswith('.txt')]
             for file_name in text_files:
                 with z.open(file_name) as f:
                     decoded_content = f.read().decode('utf-8').split("\r\n")
@@ -20,7 +20,7 @@ def loadUnprocessedStateSnapshots(file_name_with_path):
 def loadUnprocessedSatCat_current(file_name_with_path):
      '''load the unprocessed satcat json'''
      with zipfile.ZipFile(file_name_with_path) as z:
-          with z.open("satcat/current_satcat_2025_03_15T22_48_37.json") as f:
+          with z.open("satcat/current_satcat_2025_03_16T20_46_53.json") as f:
                data = json.load(f)
      return data
 
@@ -28,7 +28,7 @@ def loadUnprocessedSatCat_current(file_name_with_path):
 def loadUnprocessedSatCat_decayed(file_name_with_path):
      '''load the unprocessed satcat (decayed) json'''
      with zipfile.ZipFile(file_name_with_path) as z:
-          with z.open("satcat/decayed_satcat_2025_03_15T22_48_37.json") as f:
+          with z.open("satcat/decayed_satcat_2025_03_16T20_46_53.json") as f:
                data = json.load(f)
      return data
 
@@ -79,7 +79,7 @@ def deduplicateAndMergeDataSources(snapshot_states, satCat_current, satCat_decay
                     deduplication_record[rso_number].add(L1)
                else:
                     nDuplicatesFound+=1
-                    print("found duplicate state for "+rso_number+"; skipping...")
+                    #print("found duplicate state for "+rso_number+"; skipping...")
                     continue
 
                # 2. try to pull satcat information for RSO

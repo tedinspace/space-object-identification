@@ -45,7 +45,7 @@ def api_decayed_satellite_catalog(session):
     return resp
 
 def api_catalog_snapshot(session, start, stop):
-    resp =  session.get(f'{URL_BASE}/basicspacedata/query/class/gp/EPOCH/{start}--{stop}/orderby/NORAD_CAT_ID,EPOCH/format/3le')
+    resp =  session.get(f'{URL_BASE}/basicspacedata/query/class/gp_history/EPOCH/{start}--{stop}/orderby/NORAD_CAT_ID,EPOCH/format/3le')
     if resp.status_code != 200:
         raise Exception("something went wrong (api_catalog_snapshot)")
     return resp
