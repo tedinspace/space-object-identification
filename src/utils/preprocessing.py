@@ -82,6 +82,8 @@ def deduplicateAndMergeDataSources(snapshot_states, satCat_current, satCat_decay
           'PERIGEE_KM': [],
           # VIA LINE 1
           'MEAN_MOTION_1ST_DER': [],
+          # other
+          'COUNTRY':[],
           # save tle
           'LINE1': [],
           'LINE2': [],
@@ -150,6 +152,8 @@ def deduplicateAndMergeDataSources(snapshot_states, satCat_current, satCat_decay
                     aggregatedData["PERIGEE_KM"].append(perigee)
 
                     aggregatedData["MEAN_MOTION_1ST_DER"].append(TLE.tle_meanmotion_1st_der(L1))
+
+                    aggregatedData["COUNTRY"].append(satcat_entry["COUNTRY"].strip())
 
                     aggregatedData["LINE1"].append(L1)
                     aggregatedData["LINE2"].append(L2)
