@@ -3,3 +3,4 @@ requests==2.32.3
 skyfield==1.51
 matplotlib==3.10.1
 scikit-learn==1.6.1
+seaborn==0.13.2
