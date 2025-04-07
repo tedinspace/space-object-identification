@@ -54,3 +54,37 @@ def plot_var_count_by_cat(df, var, cat):
         data.plot(kind='bar', color=f"C{i}", alpha=0.7, title=category, ax=ax)
         ax.grid(alpha=0.7)
     plt.tight_layout()
+    
+
+
+def pca_pc1_pca2_pair(pca_result, labels, label_info, x_range=None, y_range=None):
+    '''pca first and second components full range and zoom range'''
+    type_labels, type_categories = pd.factorize(labels)
+    
+    _, ax = plt.subplots(1, 2, figsize=(18, 7))
+    scatter = ax[0].scatter(pca_result[:, 0], pca_result[:, 1], c=type_labels, cmap='tab10', alpha=0.7, edgecolors='none')
+    ax[0].set_xlabel("PC 1")
+    ax[0].set_ylabel("PC 2")
+    ax[0].set_title("PC 1&2 Highlighted by " + label_info)
+    ax[0].grid(True)
+    legend_labels = {i: type_categories[i] for i in range(len(type_categories))}
+    handles = [plt.Line2D([0], [0], marker='o', color='w', markerfacecolor=scatter.cmap(scatter.norm(i)), markersize=10) 
+               for i in legend_labels]
+    ax[0].legend(handles, legend_labels.values(), title=label_info)
+
+    # Zoomed-in PCA plot on the right
+    ax[1].scatter(pca_result[:, 0], pca_result[:, 1], c=type_labels, cmap='tab10', alpha=0.7, edgecolors='none')
+    ax[1].set_xlabel("PC 1")
+    ax[1].set_ylabel("PC 2")
+    ax[1].set_title(f"Zoomed-in PC 1&2 (Range: {x_range}, {y_range})")
+    ax[1].grid(True)
+    if x_range is not None:
+        ax[1].set_xlim(x_range)
+    if y_range is not None:
+        ax[1].set_ylim(y_range)
+
+    ax[1].legend(handles, legend_labels.values(), title=label_info)
+
+    plt.tight_layout()
+    plt.show()
+
