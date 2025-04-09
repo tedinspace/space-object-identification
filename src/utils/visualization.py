@@ -57,7 +57,7 @@ def plot_var_count_by_cat(df, var, cat):
     
 
 
-def pca_pc1_pca2_pair(pca_result, labels, label_info, x_range=None, y_range=None):
+def pca_pc1_pc2_pair(pca_result, labels, label_info, x_range=None, y_range=None):
     '''pca first and second components full range and zoom range'''
     type_labels, type_categories = pd.factorize(labels)
     
@@ -88,3 +88,25 @@ def pca_pc1_pca2_pair(pca_result, labels, label_info, x_range=None, y_range=None
     plt.tight_layout()
     plt.show()
 
+def pretty_column_names():
+    return {
+        'TYPE': 'Object Type',
+        'NAME': 'Name',
+        'RCS': 'Radar Cross Section',
+        'IS_CURRENT': 'Not Decayed', 
+        'REGIME': 'Regime',
+        'EPOCH': 'Epoch',
+        'COUNTRY': 'Country Code',
+        'LINE1': 'TLE Line 1',
+        'LINE2': 'TLE Line 2',
+        'INCL': 'Inclination',
+        'RAAN': 'Right Asc. of the Asc. Node (RAAN)',
+        'ECC': 'Eccentricity',
+        'ARG_PER': 'Argument of Perigee',
+        'MEAN_MOTION': 'Mean Motion (Rev/Day)',
+        'MEAN_ANOM': 'Mean Anomaly',
+        'SMA_KM': 'Semi-Major Axis (SMA)',
+        'APOGEE_KM': 'Apogee',
+        'PERIGEE_KM': 'Perigee',
+        'MEAN_MOTION_1ST_DER': 'First Derivative of Mean Motion',  
+    }
