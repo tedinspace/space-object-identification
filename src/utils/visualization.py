@@ -1,3 +1,4 @@
+import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -54,9 +55,34 @@ def plot_var_count_by_cat(df, var, cat):
         data.plot(kind='bar', color=f"C{i}", alpha=0.7, title=category, ax=ax)
         ax.grid(alpha=0.7)
     plt.tight_layout()
+
+def plot_histograms(df, vars, column_names_map):
+    """Plots the histograms of the specified variables."""
+    fig, axes = plt.subplots(3, 3, figsize=(14, 8))
+    axes = axes.flatten()
+    for i, column in enumerate(vars):
+        axes[i].hist(df[column], bins=20, color='pink', edgecolor='black')
+        axes[i].set_title(column_names_map[column])
+        axes[i].set_xlabel('Value')
+        axes[i].set_ylabel('Frequency')
+        axes[i].grid()
+    plt.tight_layout()
+    plt.show()
+
+def plot_corr_matrix(df, vars, column_names_map):
+    """Plots a correlation matrix for the specified variables."""
+    tick_labels = [column_names_map[item] for item in vars]
+    plt.figure(figsize=(12, 6))
+    corr = df[vars].corr()
+    sns.heatmap(corr, mask=np.triu(np.ones_like(corr, dtype=bool)), cmap='RdBu', annot=True,
+                xticklabels=tick_labels,
+                yticklabels=tick_labels
+                )
+    plt.title('Correlation Matrix: All Object Types')
+    plt.xticks(rotation=45, ha='right') 
+    plt.tight_layout()
+    plt.show()
     
-
-
 def pca_pc1_pc2_pair(pca_result, labels, label_info, x_range=None, y_range=None):
     '''pca first and second components full range and zoom range'''
     type_labels, type_categories = pd.factorize(labels)
