@@ -56,7 +56,7 @@ def plot_var_count_by_cat(df, var, cat):
         ax.grid(alpha=0.7)
     plt.tight_layout()
 
-def plot_histograms(df, vars, column_names_map):
+def plot_histograms(df, vars, column_names_map, suptitle):
     """Plots the histograms of the specified variables."""
     fig, axes = plt.subplots(3, 3, figsize=(14, 8))
     axes = axes.flatten()
@@ -66,10 +66,11 @@ def plot_histograms(df, vars, column_names_map):
         axes[i].set_xlabel('Value')
         axes[i].set_ylabel('Frequency')
         axes[i].grid()
+    plt.suptitle(suptitle)
     plt.tight_layout()
     plt.show()
 
-def plot_corr_matrix(df, vars, column_names_map):
+def plot_corr_matrix(df, vars, column_names_map, suptitle):
     """Plots a correlation matrix for the specified variables."""
     tick_labels = [column_names_map[item] for item in vars]
     plt.figure(figsize=(12, 6))
@@ -78,12 +79,12 @@ def plot_corr_matrix(df, vars, column_names_map):
                 xticklabels=tick_labels,
                 yticklabels=tick_labels
                 )
-    plt.title('Correlation Matrix: All Object Types')
     plt.xticks(rotation=45, ha='right') 
+    plt.suptitle(suptitle)
     plt.tight_layout()
     plt.show()
     
-def pca_pc1_pc2_pair(pca_result, labels, label_info, x_range=None, y_range=None):
+def pca_pc1_pc2_pair(pca_result, labels, label_info, suptitle, x_range=None, y_range=None):
     '''pca first and second components full range and zoom range'''
     type_labels, type_categories = pd.factorize(labels)
     
@@ -91,7 +92,7 @@ def pca_pc1_pc2_pair(pca_result, labels, label_info, x_range=None, y_range=None)
     scatter = ax[0].scatter(pca_result[:, 0], pca_result[:, 1], c=type_labels, cmap='tab10', alpha=0.7, edgecolors='none')
     ax[0].set_xlabel("PC 1")
     ax[0].set_ylabel("PC 2")
-    ax[0].set_title("PC 1&2 Highlighted by " + label_info)
+    ax[0].set_title("Entire Range of Data")
     ax[0].grid(True)
     legend_labels = {i: type_categories[i] for i in range(len(type_categories))}
     handles = [plt.Line2D([0], [0], marker='o', color='w', markerfacecolor=scatter.cmap(scatter.norm(i)), markersize=10) 
@@ -102,7 +103,7 @@ def pca_pc1_pc2_pair(pca_result, labels, label_info, x_range=None, y_range=None)
     ax[1].scatter(pca_result[:, 0], pca_result[:, 1], c=type_labels, cmap='tab10', alpha=0.7, edgecolors='none')
     ax[1].set_xlabel("PC 1")
     ax[1].set_ylabel("PC 2")
-    ax[1].set_title(f"Zoomed-in PC 1&2 (Range: {x_range}, {y_range})")
+    ax[1].set_title(f"Zoomed-in View (Range: {x_range}, {y_range})")
     ax[1].grid(True)
     if x_range is not None:
         ax[1].set_xlim(x_range)
@@ -111,6 +112,7 @@ def pca_pc1_pc2_pair(pca_result, labels, label_info, x_range=None, y_range=None)
 
     ax[1].legend(handles, legend_labels.values(), title=label_info)
 
+    plt.suptitle(suptitle)
     plt.tight_layout()
     plt.show()
 
