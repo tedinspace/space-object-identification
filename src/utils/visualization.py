@@ -70,6 +70,25 @@ def plot_histograms(df, vars, column_names_map, suptitle):
     plt.tight_layout()
     plt.show()
 
+def plot_histograms_by_cat(df, num_vars, cat_var, column_names_map, suptitle):
+    cat_var_vals = df[cat_var].unique()
+    fig, axes = plt.subplots(ncols=len(num_vars), nrows=len(cat_var_vals), figsize=(6*len(num_vars), 4*len(cat_var_vals)))
+    for i, num_var in enumerate(num_vars):
+        var_min, var_max = df[num_var].min(), df[num_var].max()
+        bins = np.linspace(var_min, var_max, 30)
+        for j, cat in enumerate(cat_var_vals):
+            filter_df = df[df[cat_var]==cat]
+            axes[j][i].hist(filter_df[num_var], bins=bins, color=f"C{j}", alpha=0.7, edgecolor="black", label=cat)
+            axes[j][i].set_title(column_names_map[num_var])
+            axes[j][i].set_xlabel('Value')
+            axes[j][i].set_ylabel('Frequency')
+            axes[j][i].set_xlim(var_min, var_max)
+            axes[j][i].grid(alpha=0.3)
+            axes[j][i].legend()
+    plt.suptitle(suptitle)
+    plt.tight_layout()
+    plt.show()
+
 def plot_corr_matrix(df, vars, column_names_map, suptitle):
     """Plots a correlation matrix for the specified variables."""
     tick_labels = [column_names_map[item] for item in vars]
@@ -83,6 +102,28 @@ def plot_corr_matrix(df, vars, column_names_map, suptitle):
     plt.suptitle(suptitle)
     plt.tight_layout()
     plt.show()
+
+def plot_scatter_by_cat(df, num_var1, num_var2, cat_var1, cat_var2, column_names_map, suptitle, pad_scale=0.1):
+    cat_var1_vals, cat_var2_vals = df[cat_var1].unique(), df[cat_var2].unique()
+    fig, axes = plt.subplots(nrows=len(cat_var2_vals), ncols=len(cat_var1_vals), figsize=(4*len(cat_var1_vals),3*len(cat_var2_vals)))
+    for i, cat1 in enumerate(cat_var1_vals):
+        axes[0][i].set_title(cat1)
+        sub_df = df[df[cat_var1]==cat1]
+        var1_min, var1_max = sub_df[num_var1].min()*(1-pad_scale), sub_df[num_var1].max()*(1+pad_scale)
+        var2_min, var2_max = sub_df[num_var2].min()*(1-pad_scale), sub_df[num_var2].max()*(1+pad_scale)
+        for j, cat2 in enumerate(cat_var2_vals):
+            filter_df = df[(df[cat_var1]==cat1)&(df[cat_var2]==cat2)]
+            # Maybe instead of scatterplot use kde?
+            axes[j][i].scatter(filter_df[num_var1], filter_df[num_var2], c=f"C{j}", s=3, alpha=0.5, label=cat2)
+            # sns.kdeplot(x=filter_df[num_var1], y=filter_df[num_var2], color=f"C{j}", ax=axes[j][i])
+            axes[j][i].legend(loc="upper right")
+            axes[j][i].grid(alpha=0.3)
+            axes[j][i].set_xlim(var1_min, var1_max)
+            axes[j][i].set_ylim(var2_min, var2_max)
+            axes[j][i].set_xlabel(column_names_map[num_var1])
+            axes[j][i].set_ylabel(column_names_map[num_var2])
+
+    plt.tight_layout()
     
 def pca_pc1_pc2_pair(pca_result, labels, label_info, suptitle, x_range=None, y_range=None):
     '''pca first and second components full range and zoom range'''
