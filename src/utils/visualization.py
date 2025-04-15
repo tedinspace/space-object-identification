@@ -122,7 +122,8 @@ def plot_scatter_by_cat(df, num_var1, num_var2, cat_var1, cat_var2, column_names
             axes[j][i].set_ylim(var2_min, var2_max)
             axes[j][i].set_xlabel(column_names_map[num_var1])
             axes[j][i].set_ylabel(column_names_map[num_var2])
-
+    
+    plt.suptitle(suptitle)
     plt.tight_layout()
     
 def pca_pc1_pc2_pair(pca_result, labels, label_info, suptitle, x_range=None, y_range=None):
