@@ -1,7 +1,9 @@
 import zipfile
 import json
-import utils.TLE as TLE
 import pandas as pd
+from imblearn.over_sampling import SMOTE
+
+import utils.TLE as TLE
 
 
 def loadSeveralYearsOfUnprocessedStates(file_name_array):
@@ -178,3 +180,14 @@ def load_final_raw_df(rel_dir='..'):
      df = df[df['TYPE'] != 'UNKNOWN']
      df.reset_index(drop=True, inplace=True)
      return df
+
+
+def create_smote_df(df_final, random_state=209):
+     columns_remove = ['NUMBER', 'NAME', 'RCS', 'IS_CURRENT', 'REGIME', 'COUNTRY', 'LINE1', 'LINE2', 'TYPE']
+     X = df_final.drop(columns=columns_remove)
+     y = df_final['TYPE']
+
+     smote = SMOTE(random_state=random_state)
+     X_resampled, y_resampled = smote.fit_resample(X, y)
+     
+     return pd.concat([pd.DataFrame(X_resampled, columns=X.columns), pd.Series(y_resampled, name='TYPE')], axis=1)
