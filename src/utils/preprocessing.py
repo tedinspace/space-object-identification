@@ -1,6 +1,8 @@
 import zipfile
 import json
 import utils.TLE as TLE
+import pandas as pd
+
 
 def loadSeveralYearsOfUnprocessedStates(file_name_array):
      '''take several file paths for TLE snapshots and unloads them into one big array'''
@@ -161,3 +163,18 @@ def deduplicateAndMergeDataSources(snapshot_states, satCat_current, satCat_decay
 
 
      return aggregatedData, uncataloged_states, nDuplicatesFound
+
+
+def load_final_raw_df(rel_dir='..'):
+     # load our data
+     satCat_current = pd.DataFrame(loadUnprocessedSatCat_current(rel_dir+"/data/satcat.zip")).set_index("NORAD_CAT_ID")
+     satCat_decayed = pd.DataFrame(loadUnprocessedSatCat_decayed(rel_dir+"/data/satcat.zip")).set_index("NORAD_CAT_ID")
+     snapshot_states = loadSeveralYearsOfUnprocessedStates([rel_dir+"/data/snapshots_2023.zip",rel_dir+"/data/snapshots_2024_p1.zip",rel_dir+"/data/snapshots_2024_p2.zip",rel_dir+"/data/snapshots_2025.zip"])
+     aggregatedData, _, _ = deduplicateAndMergeDataSources(snapshot_states, satCat_current, satCat_decayed)
+
+     # display shape of data
+     df = pd.DataFrame(aggregatedData)
+     
+     df = df[df['TYPE'] != 'UNKNOWN']
+     df.reset_index(drop=True, inplace=True)
+     return df
