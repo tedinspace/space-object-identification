@@ -58,7 +58,7 @@ def plot_var_count_by_cat(df, var, cat):
 
 def plot_histograms(df, vars, column_names_map, suptitle):
     """Plots the histograms of the specified variables."""
-    fig, axes = plt.subplots(3, 3, figsize=(14, 8))
+    fig, axes = plt.subplots(3, 4, figsize=(14, 8))
     axes = axes.flatten()
     for i, column in enumerate(vars):
         axes[i].hist(df[column], bins=20, color='pink', edgecolor='black')
@@ -179,4 +179,6 @@ def pretty_column_names():
         'APOGEE_KM': 'Apogee',
         'PERIGEE_KM': 'Perigee',
         'MEAN_MOTION_1ST_DER': 'First Derivative of Mean Motion',  
+        'MEAN_MOTION_2ND_DER': 'Second Derivative of Mean Motion', 
+        'B_STAR': 'B* (Drag Term)'
     }

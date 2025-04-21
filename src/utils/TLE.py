@@ -21,6 +21,35 @@ def tle_meanmotion_1st_der(L1):
     '''unpacks first deriv of MM from line 1'''
     return float(L1[33:43].strip())
 
+
+def handle_no_decimal(tmp_str):
+    '''helper function that handles values with implied zero and truncated exponents'''
+    is_neg = False
+    if tmp_str[0]=='-':
+        tmp_str = tmp_str[1:]
+        is_neg = True
+    tmp_arr = tmp_str.split('-')
+    
+    if len(tmp_arr)==2:
+        tmp_str = tmp_arr[0]+'e-'+tmp_arr[1]
+        
+    else:
+        tmp_arr = tmp_str.split('+')
+        tmp_str = tmp_arr[0]+'e+'+tmp_arr[1]
+    
+    if is_neg:
+        tmp_str = "-0."+tmp_str
+    else:
+        tmp_str = "0."+tmp_str
+    return float(tmp_str)
+def tle_meanmotion_2nd_der(L1):
+    '''unpacks send deriv of MM from line 1'''
+    return handle_no_decimal(L1[44:52].strip())
+
+def tle_b_star(L1):
+    '''b-star/ Draf coefficient'''
+    return handle_no_decimal(L1[54:61].strip())
+
 def tle_incl(L2):
     '''unpacks inclination from line 2'''
     return float(L2[8:16].strip())
