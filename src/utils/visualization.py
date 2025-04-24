@@ -66,6 +66,9 @@ def plot_histograms(df, vars, column_names_map, suptitle):
         axes[i].set_xlabel('Value')
         axes[i].set_ylabel('Frequency')
         axes[i].grid()
+    if len(vars) < len(axes):
+        for j in range(len(vars), len(axes)):
+            axes[j].axis("off")
     plt.suptitle(suptitle)
     plt.tight_layout()
     plt.show()
