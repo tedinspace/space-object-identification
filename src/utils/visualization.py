@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 
 def group_small_categories(series, threshold=0.01, other_label='OTHER'):
     """Helper function that groups together variables with very small proportions."""
@@ -160,6 +161,77 @@ def pca_pc1_pc2_pair(pca_result, labels, label_info, suptitle, x_range=None, y_r
     plt.suptitle(suptitle)
     plt.tight_layout()
     plt.show()
+    
+def plot_side_my_side_confusion(figure, left_train, left_pred, left_title, right_train, right_pred, right_title, label_encoder):
+    _, (ax1, ax2) = plt.subplots(1, 2, figsize=(10, 4))
+    train_cm = confusion_matrix(left_train, left_pred, normalize="true")
+    train_cm_disp = ConfusionMatrixDisplay(train_cm, display_labels=label_encoder.classes_)
+    train_cm_disp.plot(cmap="Reds", ax=ax1)
+    ax1.set_title(left_title)
+    val_cm = confusion_matrix(right_train, right_pred, normalize="true")
+    val_cm_disp = ConfusionMatrixDisplay(val_cm, display_labels=label_encoder.classes_)
+    val_cm_disp.plot(cmap="Blues", ax=ax2)
+    ax2.set_title(right_title)
+    plt.suptitle(figure)
+    plt.tight_layout()
+    
+def plot_state_count_side_by_side(figure, left_title,right_title, df_final, df_payload,df_rb,df_debris ):
+    # Visualize number of states per object
+    fig, axs = plt.subplots(1, 2, figsize=(10, 4))
+
+    axs[0].hist(df_final['NUMBER'].value_counts().values, bins=49, edgecolor='black', color='#3FA6DA')
+    axs[0].set_title(left_title)
+    axs[0].set_xlabel("State Count [per object]")
+    axs[0].set_ylabel("Frequency")
+    axs[0].grid(True)
+
+    axs[1].hist([df_rb['NUMBER'].value_counts().values,
+                df_payload['NUMBER'].value_counts().values,
+                df_debris['NUMBER'].value_counts().values], 
+                bins=49, edgecolor='black', stacked=True, 
+                color=["#0C5174", "#147EB3", "#68C1EE"], 
+                label=['Rocket Body', 'Payload', 'Debris'])
+    axs[1].set_title(right_title)
+    axs[1].set_xlabel("State Count [per object]")
+    axs[1].set_ylabel("Frequency")
+    axs[1].legend()
+    axs[1].grid(True)
+
+    plt.suptitle(figure)
+    plt.tight_layout()
+    plt.show()
+    
+def plot_epoch_dists(figure, left_title, right_title, df_final):
+    # Visualize distribution of earliest/latest state times and time ranges of states per object
+    df_epoch_min_max = df_final.groupby('NUMBER')['EPOCH'].agg(['min', 'max']).reset_index()
+    df_epoch_min_max['min_datetime'] = df_epoch_min_max['min'].apply(tu.year_doy_to_datetime)
+    df_epoch_min_max['max_datetime'] = df_epoch_min_max['max'].apply(tu.year_doy_to_datetime)
+    num_bins = 40
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10, 4))
+
+    ax1.hist(df_epoch_min_max['min_datetime'], bins=num_bins, alpha=0.5, label='First Epoch', density=True)
+    ax1.hist(df_epoch_min_max['max_datetime'], bins=num_bins, alpha=0.5, label='Last Epoch', density=True, color='red')
+
+    ax1.set_xlabel('Epoch Time')
+    ax1.set_ylabel('Density')
+    ax1.set_title(left_title)
+    ax1.set_xticklabels(ax1.get_xticklabels(), rotation=45, ha="right");
+    ax1.grid(True)
+    ax1.legend()
+
+    ax2.hist((df_epoch_min_max['max_datetime'] - df_epoch_min_max['min_datetime']).dt.days,
+            bins=num_bins, alpha=0.5, density=True)
+
+    ax2.set_xlabel('Days')
+    ax2.set_ylabel('Density')
+    ax2.set_title(right_title)
+    ax2.grid(True)
+
+    plt.suptitle(figure)
+    plt.tight_layout()
+    plt.show()
+
+
 
 def pretty_column_names():
     return {
