@@ -75,6 +75,33 @@ def plot_histograms(df, vars, column_names_map, suptitle):
     plt.tight_layout()
     plt.show()
 
+def plot_stacked_histograms(dfs, vars, column_names_map, suptitle):
+    """Plots stacked histograms of the specified variables for multiple dataframes."""
+    fig, axes = plt.subplots(3, 4, figsize=(14, 8))
+    axes = axes.flatten()
+    
+    colors = ["#0C5174", "#147EB3", "#68C1EE"]
+    labels = ['ROCKET BODY', 'DEBRIS', 'PAYLOAD']
+    
+    for i, column in enumerate(vars):
+        data_to_plot = [df[column] for df in dfs]
+        
+        axes[i].hist(data_to_plot, bins=20, stacked=True, color=colors, edgecolor='black')
+        
+        axes[i].set_title(column_names_map[column])
+        axes[i].set_xlabel('Value')
+        axes[i].set_ylabel('Frequency')
+        axes[i].grid()
+    
+    if len(vars) < len(axes):
+        for j in range(len(vars), len(axes)):
+            axes[j].axis("off")
+    
+    plt.suptitle(suptitle)
+    
+    fig.legend(labels, loc='lower right', bbox_to_anchor=(1, 0), fontsize=10)    
+    plt.tight_layout()
+    plt.show()
 def plot_histograms_by_cat(df, num_vars, cat_var, column_names_map, suptitle):
     cat_var_vals = df[cat_var].unique()
     fig, axes = plt.subplots(ncols=len(num_vars), nrows=len(cat_var_vals), figsize=(6*len(num_vars), 4*len(cat_var_vals)))
