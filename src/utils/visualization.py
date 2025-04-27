@@ -3,6 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
+import utils.time as tu
 
 def group_small_categories(series, threshold=0.01, other_label='OTHER'):
     """Helper function that groups together variables with very small proportions."""
@@ -215,7 +216,7 @@ def plot_epoch_dists(figure, left_title, right_title, df_final):
     ax1.set_xlabel('Epoch Time')
     ax1.set_ylabel('Density')
     ax1.set_title(left_title)
-    ax1.set_xticklabels(ax1.get_xticklabels(), rotation=45, ha="right");
+    ax1.tick_params(axis='x', rotation=45, labelrotation=45)
     ax1.grid(True)
     ax1.legend()
 
