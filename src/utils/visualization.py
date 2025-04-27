@@ -231,6 +231,25 @@ def plot_epoch_dists(figure, left_title, right_title, df_final):
     plt.suptitle(figure)
     plt.tight_layout()
     plt.show()
+    
+def plot_state_count_ratio(title, df_final):
+    rso2count = df_final['NUMBER'].value_counts()
+    thresholds = list(range(1,50))
+    rat = []
+    for t in thresholds:
+        rsos_geq_threshold = rso2count[rso2count.values >= t].index
+        rat.append(len(rsos_geq_threshold)/len(rso2count.values ))
+        
+    plt.axhline(y=.5, color='red', linestyle='--')
+    plt.text(1, .5, "50% of Data", color='red', ha='left', va='bottom')
+    plt.plot(thresholds, rat)
+    plt.title(title)
+    plt.xlabel('Threshold [Number of States]')
+    plt.ylabel('Proportion of Objects from Total')
+    plt.grid()
+    plt.show()
+
+
 
 
 
