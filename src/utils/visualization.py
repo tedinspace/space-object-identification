@@ -81,7 +81,7 @@ def plot_stacked_histograms(dfs, vars, column_names_map, suptitle):
     axes = axes.flatten()
     
     colors = ["#0C5174", "#147EB3", "#68C1EE"]
-    labels = ['ROCKET BODY', 'DEBRIS', 'PAYLOAD']
+    labels = ['ROCKET BODY', 'PAYLOAD', 'DEBRIS']
     
     for i, column in enumerate(vars):
         data_to_plot = [df[column] for df in dfs]
