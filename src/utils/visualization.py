@@ -276,7 +276,24 @@ def plot_state_count_ratio(title, df_final):
     plt.grid()
     plt.show()
 
+def plot_epoch_history(history, suptitle):
 
+    fig, (ax1, ax2) = plt.subplots(ncols=2, figsize=(10,4))
+    ax1.plot(np.arange(len(history["loss"]))+1, history["loss"], label="Train")
+    ax1.plot(np.arange(len(history["val_loss"]))+1, history["val_loss"], label="Validation")
+    ax1.grid(alpha=0.3)
+    ax1.set_xlabel("Epoch")
+    ax1.set_ylabel("Categorical Crossentropy Loss")
+    ax1.legend()
+    ax2.plot(np.arange(len(history["accuracy"]))+1, history["accuracy"], label="Train")
+    ax2.plot(np.arange(len(history["val_accuracy"]))+1, history["val_accuracy"], label="Validation")
+    ax2.grid(alpha=0.3)
+    ax2.set_xlabel("Epoch")
+    ax2.set_ylabel("Accuracy")
+    ax2.legend()
+
+    plt.suptitle(suptitle)
+    plt.tight_layout()
 
 
 
