@@ -219,16 +219,20 @@ def pca_pc1_pc2_pair(pca_result, labels, label_info, suptitle, x_range=None, y_r
     plt.tight_layout()
     plt.show()
     
-def plot_side_my_side_confusion(figure, left_train, left_pred, left_title, right_train, right_pred, right_title, label_encoder):
-    _, (ax1, ax2) = plt.subplots(1, 2, figsize=(10, 4))
-    train_cm = confusion_matrix(left_train, left_pred, normalize="true")
+def plot_side_by_side_cm(figure, train, train_pred, val, val_pred, test, test_pred, label_encoder):
+    _, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(15, 5))
+    train_cm = confusion_matrix(train, train_pred, normalize="true")
     train_cm_disp = ConfusionMatrixDisplay(train_cm, display_labels=label_encoder.classes_)
-    train_cm_disp.plot(cmap="Reds", ax=ax1)
-    ax1.set_title(left_title)
-    val_cm = confusion_matrix(right_train, right_pred, normalize="true")
+    train_cm_disp.plot(cmap="viridis", ax=ax1)
+    ax1.set_title("Train Set Confusion Matrix")
+    val_cm = confusion_matrix(val, val_pred, normalize="true")
     val_cm_disp = ConfusionMatrixDisplay(val_cm, display_labels=label_encoder.classes_)
-    val_cm_disp.plot(cmap="Blues", ax=ax2)
-    ax2.set_title(right_title)
+    val_cm_disp.plot(cmap="viridis", ax=ax2)
+    ax2.set_title("Validation Set Confusion Matrix")
+    test_cm = confusion_matrix(test, test_pred, normalize="true")
+    test_cm_disp = ConfusionMatrixDisplay(test_cm, display_labels=label_encoder.classes_)
+    test_cm_disp.plot(cmap="viridis", ax=ax3)
+    ax3.set_title("Test Set Confusion Matrix")
     plt.suptitle(figure)
     plt.tight_layout()
     
@@ -305,23 +309,20 @@ def plot_state_count_ratio(title, df_final):
     plt.grid()
     plt.show()
 
-def plot_epoch_history(history, suptitle):
+def plot_fit_history(history, model_name, suptitle=''):
 
-    fig, (ax1, ax2) = plt.subplots(ncols=2, figsize=(10,4))
-    ax1.plot(np.arange(len(history["loss"]))+1, history["loss"], label="Train")
-    ax1.plot(np.arange(len(history["val_loss"]))+1, history["val_loss"], label="Validation")
-    ax1.grid(alpha=0.3)
-    ax1.set_xlabel("Epoch")
-    ax1.set_ylabel("Categorical Crossentropy Loss")
-    ax1.legend()
-    ax2.plot(np.arange(len(history["accuracy"]))+1, history["accuracy"], label="Train")
-    ax2.plot(np.arange(len(history["val_accuracy"]))+1, history["val_accuracy"], label="Validation")
-    ax2.grid(alpha=0.3)
-    ax2.set_xlabel("Epoch")
-    ax2.set_ylabel("Accuracy")
-    ax2.legend()
+    fig, axes = plt.subplots(nrows=1, ncols=2, figsize=(12,4))
+    for i, metric in enumerate(['loss', 'accuracy']):
+        for k, split in enumerate(['', 'val_']):
+            data = history[f'{split}{metric}']
+            axes[i].plot(np.arange(len(data))+1, data, color=f'C{k}', label='Train' if split == '' else 'Validation', linewidth=3)
+            axes[i].legend()
+            axes[i].set_xlabel('Epochs')
+            axes[i].set_ylabel(metric.title())
+            axes[i].set_title(f'{model_name.title()} {metric.title()}')
+            axes[i].grid(alpha=0.7)
 
-    plt.suptitle(suptitle)
+    if suptitle != '': plt.suptitle(suptitle)
     plt.tight_layout()
 
 
