@@ -77,7 +77,7 @@ def plot_histograms(df, vars, column_names_map, suptitle):
 
 def plot_stacked_histograms(dfs, vars, column_names_map, suptitle):
     """Plots stacked histograms of the specified variables for multiple dataframes."""
-    fig, axes = plt.subplots(3, 4, figsize=(14, 8))
+    fig, axes = plt.subplots(3, 4, figsize=(16, 8))
     axes = axes.flatten()
     
     colors = ["#0C5174", "#147EB3", "#68C1EE"]
@@ -92,6 +92,11 @@ def plot_stacked_histograms(dfs, vars, column_names_map, suptitle):
         axes[i].set_xlabel('Value')
         axes[i].set_ylabel('Frequency')
         axes[i].grid()
+        
+        if column == 'APOGEE_KM':
+            axes[i].set_xticks([0, 200000, 400000])
+        elif column == 'PERIGEE_KM': 
+            axes[i].set_xticks([0, 100000, 200000, 300000])
     
     if len(vars) < len(axes):
         for j in range(len(vars), len(axes)):
@@ -105,7 +110,7 @@ def plot_stacked_histograms(dfs, vars, column_names_map, suptitle):
 
 def plot_stacked_histograms_log_yaxis(dfs, vars, column_names_map, suptitle):
     """Plots stacked histograms of the specified variables for multiple dataframes with log y-axis."""
-    fig, axes = plt.subplots(3, 4, figsize=(14, 8))
+    fig, axes = plt.subplots(3, 4, figsize=(16, 8))
     axes = axes.flatten()
     
     colors = ["#0C5174", "#147EB3", "#68C1EE"]
@@ -115,6 +120,11 @@ def plot_stacked_histograms_log_yaxis(dfs, vars, column_names_map, suptitle):
         data_to_plot = [df[column] for df in dfs]
         
         axes[i].hist(data_to_plot, bins=20, stacked=True, color=colors, edgecolor='black', log=True)
+
+        if column == 'APOGEE_KM':
+            axes[i].set_xticks([0, 200000, 400000])
+        elif column == 'PERIGEE_KM': 
+            axes[i].set_xticks([0, 100000, 200000, 300000])
         
         axes[i].set_title(column_names_map[column])
         axes[i].set_xlabel('Value')
